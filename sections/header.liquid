@@ -1,11 +1,46 @@
 <style>
   .mobile-menu{display:none}
+
+  /* Seamless infinite announcement bar */
+  .announcement{overflow:hidden}
+  .announcement__track{
+    display:flex!important;
+    align-items:center;
+    width:max-content!important;
+    min-width:0!important;
+    gap:0!important;
+    padding:0!important;
+    animation:nomad-announcement-marquee 24s linear infinite!important;
+    will-change:transform;
+  }
+  .announcement__group{
+    display:flex;
+    align-items:center;
+    justify-content:space-around;
+    flex:0 0 auto;
+    width:max-content;
+    min-width:100vw;
+    gap:54px;
+    padding:9px 28px;
+    white-space:nowrap;
+    font-size:11px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+  }
+  @keyframes nomad-announcement-marquee{
+    from{transform:translate3d(0,0,0)}
+    to{transform:translate3d(-50%,0,0)}
+  }
+
   @media(max-width:990px){
     .mobile-menu{position:absolute;left:0;right:0;top:68px;background:#fff;border-top:1px solid #eee;border-bottom:1px solid #eee;padding:16px 20px;z-index:40}
     .mobile-menu.is-open{display:block}
     .mobile-menu a{display:block;padding:13px 0;font-size:12px;text-transform:uppercase;letter-spacing:.1em}
   }
-  @media(max-width:640px){.mobile-menu{top:62px}}
+  @media(max-width:640px){
+    .mobile-menu{top:62px}
+    .announcement__group{gap:36px;padding:9px 18px}
+  }
 </style>
 
 {% liquid
@@ -17,12 +52,16 @@
 
 <div class="announcement" role="region" aria-label="Store announcements">
   <div class="announcement__track">
-    <span>{{ section.settings.announcement_1 }}</span><span>•</span>
-    <span>{{ section.settings.announcement_2 }}</span><span>•</span>
-    <span>{{ section.settings.announcement_3 }}</span><span>•</span>
-    <span aria-hidden="true">{{ section.settings.announcement_1 }}</span><span aria-hidden="true">•</span>
-    <span aria-hidden="true">{{ section.settings.announcement_2 }}</span><span aria-hidden="true">•</span>
-    <span aria-hidden="true">{{ section.settings.announcement_3 }}</span><span aria-hidden="true">•</span>
+    <div class="announcement__group">
+      <span>{{ section.settings.announcement_1 }}</span><span>•</span>
+      <span>{{ section.settings.announcement_2 }}</span><span>•</span>
+      <span>{{ section.settings.announcement_3 }}</span><span>•</span>
+    </div>
+    <div class="announcement__group" aria-hidden="true">
+      <span>{{ section.settings.announcement_1 }}</span><span>•</span>
+      <span>{{ section.settings.announcement_2 }}</span><span>•</span>
+      <span>{{ section.settings.announcement_3 }}</span><span>•</span>
+    </div>
   </div>
 </div>
 
