@@ -1,41 +1,84 @@
-<div class="announcement">
+{% liquid
+  assign products_link = section.settings.products_link
+  if products_link == blank
+    assign products_link = '/collections/t-shirts'
+  endif
+  assign track_link = section.settings.track_link
+  if track_link == blank
+    assign track_link = '/pages/track-order'
+  endif
+  assign contact_link = section.settings.contact_link
+  if contact_link == blank
+    assign contact_link = '/pages/contact-us'
+  endif
+%}
+
+<div class="announcement" role="region" aria-label="Store announcements">
   <div class="announcement__track">
-    <span>{{ section.settings.announcement_1 }}</span><span>•</span><span>{{ section.settings.announcement_2 }}</span><span>•</span><span>{{ section.settings.announcement_3 }}</span>
+    <span>{{ section.settings.announcement_1 }}</span><span>•</span>
+    <span>{{ section.settings.announcement_2 }}</span><span>•</span>
+    <span>{{ section.settings.announcement_3 }}</span><span>•</span>
+    <span aria-hidden="true">{{ section.settings.announcement_1 }}</span><span aria-hidden="true">•</span>
+    <span aria-hidden="true">{{ section.settings.announcement_2 }}</span><span aria-hidden="true">•</span>
+    <span aria-hidden="true">{{ section.settings.announcement_3 }}</span><span aria-hidden="true">•</span>
   </div>
 </div>
+
 <header class="site-header">
   <div class="page-width site-header__inner">
     <div>
       <button class="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" data-menu-toggle>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 8h16M4 16h16"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M4 8h16M4 16h16"/></svg>
       </button>
       <nav class="site-nav" aria-label="Main navigation">
         <a href="{{ routes.root_url }}">Home</a>
-        <a href="{{ section.settings.products_link }}">T-Shirts</a>
-        <a href="{{ section.settings.track_link }}">Track Order</a>
-        <a href="{{ section.settings.contact_link }}">Contact</a>
+        <a href="{{ products_link }}">T-Shirts</a>
+        <a href="{{ track_link }}">Track Order</a>
+        <a href="{{ contact_link }}">Contact</a>
       </nav>
     </div>
-    <a class="brand" href="{{ routes.root_url }}" aria-label="{{ shop.name }} home">
+
+    <a class="brand" href="{{ routes.root_url }}" aria-label="{{ shop.name | escape }} home">
       {% if section.settings.logo != blank %}
         {{ section.settings.logo | image_url: width: 420 | image_tag: widths: '140,180,240,360', alt: shop.name }}
       {% else %}
-        NØMAD
+        <img src="{{ 'logo.png' | asset_url }}" alt="{{ shop.name | escape }}" width="360" height="120" loading="eager">
       {% endif %}
     </a>
+
     <div class="header-actions">
-      <a class="icon-link" href="{{ routes.account_url }}" aria-label="Account">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c.8-4 3-6 7-6s6.2 2 7 6"/></svg><span class="account-label">Account</span>
-      </a>
+      {% if shop.customer_accounts_enabled %}
+        <a class="icon-link" href="{{ routes.account_url }}" aria-label="Account">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c.8-4 3-6 7-6s6.2 2 7 6"/></svg>
+          <span class="account-label">Account</span>
+        </a>
+      {% endif %}
       <a class="icon-link" href="{{ routes.cart_url }}" aria-label="Cart">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 8h12l1 12H5L6 8Z"/><path d="M9 9V6a3 3 0 0 1 6 0v3"/></svg><span class="cart-count">{{ cart.item_count }}</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M6 8h12l1 12H5L6 8Z"/><path d="M9 9V6a3 3 0 0 1 6 0v3"/></svg>
+        <span class="cart-count">{{ cart.item_count }}</span>
       </a>
     </div>
   </div>
-  <nav class="mobile-menu" data-mobile-menu>
-    <a href="{{ routes.root_url }}">Home</a><a href="{{ section.settings.products_link }}">T-Shirts</a><a href="{{ section.settings.track_link }}">Track Order</a><a href="{{ section.settings.contact_link }}">Contact</a>
+
+  <nav class="mobile-menu" data-mobile-menu aria-label="Mobile navigation">
+    <a href="{{ routes.root_url }}">Home</a>
+    <a href="{{ products_link }}">T-Shirts</a>
+    <a href="{{ track_link }}">Track Order</a>
+    <a href="{{ contact_link }}">Contact</a>
   </nav>
 </header>
+
 {% schema %}
-{"name":"Header","settings":[{"type":"image_picker","id":"logo","label":"Logo"},{"type":"text","id":"announcement_1","label":"Top message 1","default":"Worldwide shipping"},{"type":"text","id":"announcement_2","label":"Top message 2","default":"Free shipping over $120"},{"type":"text","id":"announcement_3","label":"Top message 3","default":"Secure checkout"},{"type":"url","id":"products_link","label":"T-Shirts link","default":"/collections/t-shirts"},{"type":"url","id":"track_link","label":"Track order link","default":"/pages/track-order"},{"type":"url","id":"contact_link","label":"Contact link","default":"/pages/contact-us"}]}
+{
+  "name": "Header",
+  "settings": [
+    { "type": "image_picker", "id": "logo", "label": "Logo override" },
+    { "type": "text", "id": "announcement_1", "label": "Top message 1", "default": "Worldwide shipping" },
+    { "type": "text", "id": "announcement_2", "label": "Top message 2", "default": "Free shipping over $120" },
+    { "type": "text", "id": "announcement_3", "label": "Top message 3", "default": "Secure checkout" },
+    { "type": "url", "id": "products_link", "label": "T-Shirts link" },
+    { "type": "url", "id": "track_link", "label": "Track order link" },
+    { "type": "url", "id": "contact_link", "label": "Contact link" }
+  ]
+}
 {% endschema %}
