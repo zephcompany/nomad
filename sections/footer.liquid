@@ -7,7 +7,7 @@
         </a>
         <p style="max-width:330px;color:#aaa;margin-top:18px">Statement pieces made for people who move differently.</p>
       </div>
-      <div class="footer-col"><h4>Shop</h4><a href="/collections/t-shirts">T-Shirts</a><a href="/collections/all">All Products</a><a href="/pages/track-order">Track Order</a></div>
+      <div class="footer-col"><h4>Shop</h4><a href="/collections/t-shirts">T-Shirts</a><a href="/collections/all">All Products</a><a href="{{ routes.account_url }}">Track Order</a></div>
       <div class="footer-col"><h4>Help</h4><a href="/pages/contact-us">Contact</a><a href="/policies/shipping-policy">Shipping</a><a href="/policies/refund-policy">Returns</a><a href="/policies/privacy-policy">Privacy</a></div>
       <div class="footer-col"><h4>Stay connected</h4><p>New drops, restocks and NØMAD updates.</p>{% form 'customer', class: 'newsletter' %}<input type="hidden" name="contact[tags]" value="newsletter"><input type="email" name="contact[email]" placeholder="Email address" required><button type="submit" aria-label="Subscribe">→</button>{% endform %}</div>
     </div>
