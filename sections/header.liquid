@@ -13,14 +13,6 @@
   if products_link == blank
     assign products_link = '/collections/t-shirts'
   endif
-  assign track_link = section.settings.track_link
-  if track_link == blank
-    assign track_link = '/pages/track-order'
-  endif
-  assign contact_link = section.settings.contact_link
-  if contact_link == blank
-    assign contact_link = '/pages/contact-us'
-  endif
 %}
 
 <div class="announcement" role="region" aria-label="Store announcements">
@@ -43,8 +35,8 @@
       <nav class="site-nav" aria-label="Main navigation">
         <a href="{{ routes.root_url }}">Home</a>
         <a href="{{ products_link }}">T-Shirts</a>
-        <a href="{{ track_link }}">Track Order</a>
-        <a href="{{ contact_link }}">Contact</a>
+        <a href="/pages/track-order">Track Order</a>
+        <a href="/pages/contact-us">Contact</a>
       </nav>
     </div>
 
@@ -73,8 +65,8 @@
   <nav class="mobile-menu" data-mobile-menu aria-label="Mobile navigation">
     <a href="{{ routes.root_url }}">Home</a>
     <a href="{{ products_link }}">T-Shirts</a>
-    <a href="{{ track_link }}">Track Order</a>
-    <a href="{{ contact_link }}">Contact</a>
+    <a href="/pages/track-order">Track Order</a>
+    <a href="/pages/contact-us">Contact</a>
   </nav>
 </header>
 
@@ -86,9 +78,7 @@
     { "type": "text", "id": "announcement_1", "label": "Top message 1", "default": "Worldwide shipping" },
     { "type": "text", "id": "announcement_2", "label": "Top message 2", "default": "Free shipping over $120" },
     { "type": "text", "id": "announcement_3", "label": "Top message 3", "default": "Secure checkout" },
-    { "type": "url", "id": "products_link", "label": "T-Shirts link" },
-    { "type": "url", "id": "track_link", "label": "Track order link" },
-    { "type": "url", "id": "contact_link", "label": "Contact link" }
+    { "type": "url", "id": "products_link", "label": "T-Shirts link" }
   ]
 }
 {% endschema %}
