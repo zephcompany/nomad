@@ -1,0 +1,16 @@
+<section class="page-width product-page">
+  <div class="product-gallery">{% for image in product.images %}{{ image | image_url: width: 1600 | image_tag: widths: '500,800,1200,1600', loading: 'lazy', alt: product.title }}{% endfor %}</div>
+  <div class="product-info">
+    <p class="eyebrow">NØMAD</p><h1>{{ product.title }}</h1><div class="product-price" data-product-price>{{ product.selected_or_first_available_variant.price | money }}</div>
+    {% form 'product', product, data-product-form: '' %}
+      <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+      {% for option in product.options_with_values %}
+        <fieldset class="option" data-option-index="{{ forloop.index0 }}"><label>{{ option.name }}</label><div class="option-values">{% for value in option.values %}<label><input type="radio" name="option-{{ forloop.parentloop.index0 }}" value="{{ value | escape }}" {% if option.selected_value == value %}checked{% endif %}><span>{{ value }}</span></label>{% endfor %}</div></fieldset>
+      {% endfor %}
+      <button class="add-to-cart" type="submit" {% unless product.selected_or_first_available_variant.available %}disabled{% endunless %}>{% if product.selected_or_first_available_variant.available %}Add to cart{% else %}Sold out{% endif %}</button>
+      <script type="application/json" data-variants-json>{{ product.variants | json }}</script>
+    {% endform %}
+    <div class="product-description">{{ product.description }}</div>
+  </div>
+</section>
+{% schema %}{"name":"Main product","settings":[]}{% endschema %}

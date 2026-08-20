@@ -1,0 +1,32 @@
+{% assign collection = section.settings.collection %}
+<section class="section">
+  <div class="page-width">
+    <div class="section-head">
+      <div><p class="eyebrow">{{ section.settings.eyebrow }}</p><h2 class="section-title">{{ section.settings.heading }}</h2></div>
+      {% if collection != blank %}<a class="section-link" href="{{ collection.url }}">View all</a>{% endif %}
+    </div>
+    <div class="product-grid">
+      {% if collection != blank %}
+        {% for product in collection.products limit: section.settings.limit %}
+          <article class="product-card">
+            <a href="{{ product.url }}">
+              <div class="product-card__media">
+                {% if product.featured_image %}{{ product.featured_image | image_url: width: 1000 | image_tag: class: 'product-card__primary', widths: '360,540,720,1000', loading: 'lazy', alt: product.title }}{% endif %}
+                {% if product.images[1] %}{{ product.images[1] | image_url: width: 1000 | image_tag: class: 'product-card__hover', widths: '360,540,720,1000', loading: 'lazy', alt: product.title }}{% endif %}
+              </div>
+              <div class="product-card__meta">
+                <h3 class="product-card__title">{{ product.title }}</h3>
+                <div class="product-card__row"><span class="product-card__price">{{ product.price | money }}</span><span class="swatches"><i class="swatch swatch--black"></i><i class="swatch swatch--white"></i></span></div>
+              </div>
+            </a>
+          </article>
+        {% endfor %}
+      {% else %}
+        {% for i in (1..4) %}<article class="product-card"><div class="product-card__media"></div><div class="product-card__meta"><h3 class="product-card__title">Choose collection in Customize</h3><div class="product-card__price">$59.00</div></div></article>{% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% schema %}
+{"name":"Featured collection","settings":[{"type":"text","id":"eyebrow","label":"Eyebrow","default":"NØMAD essentials"},{"type":"text","id":"heading","label":"Heading","default":"Best Sellers"},{"type":"collection","id":"collection","label":"Collection"},{"type":"range","id":"limit","label":"Products","min":4,"max":12,"step":4,"default":8}],"presets":[{"name":"Featured collection"}]}
+{% endschema %}

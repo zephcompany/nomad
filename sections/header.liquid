@@ -1,0 +1,41 @@
+<div class="announcement">
+  <div class="announcement__track">
+    <span>{{ section.settings.announcement_1 }}</span><span>•</span><span>{{ section.settings.announcement_2 }}</span><span>•</span><span>{{ section.settings.announcement_3 }}</span>
+  </div>
+</div>
+<header class="site-header">
+  <div class="page-width site-header__inner">
+    <div>
+      <button class="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" data-menu-toggle>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 8h16M4 16h16"/></svg>
+      </button>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="{{ routes.root_url }}">Home</a>
+        <a href="{{ section.settings.products_link }}">T-Shirts</a>
+        <a href="{{ section.settings.track_link }}">Track Order</a>
+        <a href="{{ section.settings.contact_link }}">Contact</a>
+      </nav>
+    </div>
+    <a class="brand" href="{{ routes.root_url }}" aria-label="{{ shop.name }} home">
+      {% if section.settings.logo != blank %}
+        {{ section.settings.logo | image_url: width: 420 | image_tag: widths: '140,180,240,360', alt: shop.name }}
+      {% else %}
+        NØMAD
+      {% endif %}
+    </a>
+    <div class="header-actions">
+      <a class="icon-link" href="{{ routes.account_url }}" aria-label="Account">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c.8-4 3-6 7-6s6.2 2 7 6"/></svg><span class="account-label">Account</span>
+      </a>
+      <a class="icon-link" href="{{ routes.cart_url }}" aria-label="Cart">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 8h12l1 12H5L6 8Z"/><path d="M9 9V6a3 3 0 0 1 6 0v3"/></svg><span class="cart-count">{{ cart.item_count }}</span>
+      </a>
+    </div>
+  </div>
+  <nav class="mobile-menu" data-mobile-menu>
+    <a href="{{ routes.root_url }}">Home</a><a href="{{ section.settings.products_link }}">T-Shirts</a><a href="{{ section.settings.track_link }}">Track Order</a><a href="{{ section.settings.contact_link }}">Contact</a>
+  </nav>
+</header>
+{% schema %}
+{"name":"Header","settings":[{"type":"image_picker","id":"logo","label":"Logo"},{"type":"text","id":"announcement_1","label":"Top message 1","default":"Worldwide shipping"},{"type":"text","id":"announcement_2","label":"Top message 2","default":"Free shipping over $120"},{"type":"text","id":"announcement_3","label":"Top message 3","default":"Secure checkout"},{"type":"url","id":"products_link","label":"T-Shirts link","default":"/collections/t-shirts"},{"type":"url","id":"track_link","label":"Track order link","default":"/pages/track-order"},{"type":"url","id":"contact_link","label":"Contact link","default":"/pages/contact-us"}]}
+{% endschema %}

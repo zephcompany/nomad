@@ -1,0 +1,1 @@
+You can upload optional static theme images into this assets folder. For hero banners, the recommended workflow is Shopify Admin → Online Store → Themes → Customize → Image banner, because the theme already supports separate desktop and mobile banners.
