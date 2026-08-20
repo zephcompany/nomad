@@ -1,3 +1,13 @@
+<style>
+  .mobile-menu{display:none}
+  @media(max-width:990px){
+    .mobile-menu{position:absolute;left:0;right:0;top:68px;background:#fff;border-top:1px solid #eee;border-bottom:1px solid #eee;padding:16px 20px;z-index:40}
+    .mobile-menu.is-open{display:block}
+    .mobile-menu a{display:block;padding:13px 0;font-size:12px;text-transform:uppercase;letter-spacing:.1em}
+  }
+  @media(max-width:640px){.mobile-menu{top:62px}}
+</style>
+
 {% liquid
   assign products_link = section.settings.products_link
   if products_link == blank
