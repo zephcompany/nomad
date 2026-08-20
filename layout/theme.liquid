@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="theme-color" content="#ffffff">
     <link rel="canonical" href="{{ canonical_url }}">
+    <link rel="icon" type="image/jpeg" href="{{ 'FLAV ICO.jpg' | asset_url }}">
     <title>{% if page_title %}{{ page_title }}{% else %}NØMAD{% endif %}{% if current_tags %} – {{ current_tags | join: ', ' }}{% endif %}{% unless page_title contains shop.name %} – {{ shop.name }}{% endunless %}</title>
     {% if page_description %}<meta name="description" content="{{ page_description | escape }}">{% endif %}
     {{ content_for_header }}
