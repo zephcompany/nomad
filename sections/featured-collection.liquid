@@ -1,5 +1,5 @@
 {% assign collection = section.settings.collection %}
-<section class="section">
+<section class="section featured-products-home">
   <div class="page-width">
     <div class="section-head">
       <div><p class="eyebrow">{{ section.settings.eyebrow }}</p><h2 class="section-title">{{ section.settings.heading }}</h2></div>
@@ -13,10 +13,10 @@
             <a class="product-card__image-link" href="{{ product.url }}" aria-label="View {{ product.title | escape }}">
               <div class="product-card__media">
                 {% if product.featured_image %}
-                  {{ product.featured_image | image_url: width: 1000 | image_tag: class: 'product-card__primary', widths: '360,540,720,1000', loading: 'lazy', alt: product.title }}
+                  {{ product.featured_image | image_url: width: 1200 | image_tag: class: 'product-card__primary', widths: '360,540,720,1000,1200', loading: 'lazy', alt: product.title }}
                 {% endif %}
                 {% if product.images[2] %}
-                  {{ product.images[2] | image_url: width: 1000 | image_tag: class: 'product-card__hover', widths: '360,540,720,1000', loading: 'lazy', alt: product.title }}
+                  {{ product.images[2] | image_url: width: 1200 | image_tag: class: 'product-card__hover', widths: '360,540,720,1000,1200', loading: 'lazy', alt: product.title }}
                 {% endif %}
               </div>
             </a>
@@ -41,7 +41,7 @@
                           aria-label="{{ color | escape }}"
                           title="{{ color | escape }}"
                           data-color-swatch
-                          data-image="{{ swatch_image | image_url: width: 1000 }}"
+                          data-image="{{ swatch_image | image_url: width: 1200 }}"
                         ></button>
                       {% endif %}
                     {% endfor %}
