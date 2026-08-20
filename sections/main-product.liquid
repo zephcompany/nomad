@@ -1,76 +1,219 @@
-<section class="page-width product-page">
-  <div class="product-media-viewer" data-product-gallery>
-    {% assign current_media = product.selected_or_first_available_variant.featured_image | default: product.featured_image %}
+{% assign selected_variant = product.selected_or_first_available_variant %}
+{% assign current_media = selected_variant.featured_image | default: product.featured_image %}
+{% assign has_size_option = false %}
 
-    <div class="product-gallery__main">
-      {% if current_media %}
-        {{ current_media | image_url: width: 1800 | image_tag: class: 'product-gallery__main-image', widths: '600,900,1200,1600,1800', loading: 'eager', fetchpriority: 'high', alt: product.title, data-product-main-image: '' }}
+<section class="nomad-product-shell">
+  <div class="page-width product-breadcrumb">
+    <a href="{{ routes.root_url }}">Home</a>
+    <span>/</span>
+    <span>{{ product.title }}</span>
+  </div>
+
+  <div class="page-width product-page product-page--reference">
+    <div class="product-media-layout" data-product-gallery>
+      {% if product.images.size > 1 %}
+        <div class="product-gallery__thumbs product-gallery__thumbs--side" aria-label="Product images">
+          {% for image in product.images %}
+            <button
+              class="product-gallery__thumb{% if image.id == current_media.id %} is-active{% endif %}"
+              type="button"
+              aria-label="View image {{ forloop.index }}"
+              data-gallery-thumbnail
+              data-image-id="{{ image.id }}"
+              data-image-src="{{ image | image_url: width: 1800 }}"
+              data-image-alt="{{ product.title | escape }}"
+            >
+              {{ image | image_url: width: 220 | image_tag: widths: '90,140,220', loading: 'lazy', alt: product.title }}
+            </button>
+          {% endfor %}
+        </div>
       {% endif %}
+
+      <div class="product-gallery__main product-gallery__main--large">
+        {% if current_media %}
+          {{ current_media | image_url: width: 1800 | image_tag: class: 'product-gallery__main-image', widths: '600,900,1200,1600,1800', loading: 'eager', fetchpriority: 'high', alt: product.title, data-product-main-image: '' }}
+        {% endif %}
+        <span class="product-gallery__zoom" aria-hidden="true">⌕</span>
+      </div>
     </div>
 
-    {% if product.images.size > 1 %}
-      <div class="product-gallery__thumbs" aria-label="Product images">
-        {% for image in product.images %}
-          <button
-            class="product-gallery__thumb{% if image.id == current_media.id %} is-active{% endif %}"
-            type="button"
-            aria-label="View image {{ forloop.index }}"
-            data-gallery-thumbnail
-            data-image-id="{{ image.id }}"
-            data-image-src="{{ image | image_url: width: 1800 }}"
-            data-image-alt="{{ product.title | escape }}"
-          >
-            {{ image | image_url: width: 220 | image_tag: widths: '90,140,220', loading: 'lazy', alt: product.title }}
-          </button>
+    <aside class="product-info product-info--reference">
+      <p class="product-type-label">NØMAD T-SHIRT</p>
+      <h1>{{ product.title }}</h1>
+      <div class="product-price" data-product-price>{{ selected_variant.price | money }}</div>
+      <p class="product-checkout-note">Taxes and shipping calculated at checkout.</p>
+
+      {% form 'product', product, data-product-form: '', class: 'product-buy-form' %}
+        <input type="hidden" name="id" value="{{ selected_variant.id }}">
+        <input type="hidden" name="quantity" value="1" data-product-quantity>
+
+        {% for option in product.options_with_values %}
+          {% assign option_name_down = option.name | downcase %}
+          {% if option_name_down == 'size' %}{% assign has_size_option = true %}{% endif %}
+
+          {% if option_name_down == 'color' %}
+            <fieldset class="option product-color-option" data-option-index="{{ forloop.index0 }}">
+              <div class="option-heading">
+                <span>Color: <strong data-selected-color>{{ option.selected_value }}</strong></span>
+              </div>
+              <div class="product-color-thumbs">
+                {% for value in option.values %}
+                  {% if forloop.parentloop.index == 1 %}
+                    {% assign color_variant = product.variants | where: 'option1', value | first %}
+                  {% elsif forloop.parentloop.index == 2 %}
+                    {% assign color_variant = product.variants | where: 'option2', value | first %}
+                  {% else %}
+                    {% assign color_variant = product.variants | where: 'option3', value | first %}
+                  {% endif %}
+
+                  <label class="product-color-thumb" title="{{ value | escape }}">
+                    <input type="radio" name="option-{{ forloop.parentloop.index0 }}" value="{{ value | escape }}" {% if option.selected_value == value %}checked{% endif %}>
+                    <span class="product-color-thumb__visual">
+                      {% if color_variant.featured_image %}
+                        {{ color_variant.featured_image | image_url: width: 180 | image_tag: widths: '90,180', loading: 'lazy', alt: value }}
+                      {% else %}
+                        <i class="product-color-fallback product-color-fallback--{{ value | handleize }}"></i>
+                      {% endif %}
+                    </span>
+                  </label>
+                {% endfor %}
+              </div>
+            </fieldset>
+          {% else %}
+            <fieldset class="option product-option-standard" data-option-index="{{ forloop.index0 }}">
+              <div class="option-heading"><span>{{ option.name }}</span></div>
+              <div class="option-values option-values--reference">
+                {% for value in option.values %}
+                  <label>
+                    <input type="radio" name="option-{{ forloop.parentloop.index0 }}" value="{{ value | escape }}" {% if option.selected_value == value %}checked{% endif %}>
+                    <span>{{ value }}</span>
+                  </label>
+                {% endfor %}
+              </div>
+            </fieldset>
+          {% endif %}
         {% endfor %}
-      </div>
-    {% endif %}
-  </div>
 
-  <div class="product-info">
-    <p class="eyebrow">NØMAD</p>
-    <h1>{{ product.title }}</h1>
-    <div class="product-price" data-product-price>{{ product.selected_or_first_available_variant.price | money }}</div>
+        {% unless has_size_option %}
+          <fieldset class="option option--size product-option-standard">
+            <div class="option-heading"><span>Size</span><span class="size-guide-note">Relaxed fit</span></div>
+            <div class="option-values option-values--reference option-values--size">
+              {% assign nomad_sizes = 'S,M,L,XL' | split: ',' %}
+              {% for size in nomad_sizes %}
+                <label>
+                  <input type="radio" name="properties[Size]" value="{{ size }}" {% if forloop.first %}required{% endif %}>
+                  <span>{{ size }}</span>
+                </label>
+              {% endfor %}
+            </div>
+          </fieldset>
+        {% endunless %}
 
-    {% form 'product', product, data-product-form: '' %}
-      <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+        <div class="purchase-offer-heading"><span>Choose your quantity</span></div>
+        <div class="purchase-offers" data-purchase-offers data-unit-price="{{ selected_variant.price }}">
+          <label class="purchase-offer is-selected">
+            <input type="radio" name="purchase_quantity" value="1" checked data-purchase-quantity>
+            <span class="purchase-offer__radio"></span>
+            <span class="purchase-offer__copy"><strong>Buy 1</strong><small>One NØMAD tee</small></span>
+            <strong class="purchase-offer__price" data-offer-price="1">{{ selected_variant.price | money }}</strong>
+          </label>
 
-      {% for option in product.options_with_values %}
-        <fieldset class="option" data-option-index="{{ forloop.index0 }}">
-          <label>{{ option.name }}</label>
-          <div class="option-values">
-            {% for value in option.values %}
-              <label>
-                <input type="radio" name="option-{{ forloop.parentloop.index0 }}" value="{{ value | escape }}" {% if option.selected_value == value %}checked{% endif %}>
-                <span>{{ value }}</span>
-              </label>
-            {% endfor %}
-          </div>
-        </fieldset>
-      {% endfor %}
+          <label class="purchase-offer purchase-offer--popular">
+            <span class="purchase-offer__badge">Most popular</span>
+            <input type="radio" name="purchase_quantity" value="3" data-purchase-quantity>
+            <span class="purchase-offer__radio"></span>
+            <span class="purchase-offer__copy"><strong>Buy 3</strong><small>Three NØMAD tees</small></span>
+            <strong class="purchase-offer__price" data-offer-price="3">{{ selected_variant.price | times: 3 | money }}</strong>
+          </label>
+        </div>
 
-      {% unless product.options contains 'Size' %}
-        <fieldset class="option option--size">
-          <label>Size</label>
-          <div class="option-values option-values--size">
-            {% assign nomad_sizes = 'S,M,L,XL' | split: ',' %}
-            {% for size in nomad_sizes %}
-              <label>
-                <input type="radio" name="properties[Size]" value="{{ size }}" {% if forloop.first %}required{% endif %}>
-                <span>{{ size }}</span>
-              </label>
-            {% endfor %}
-          </div>
-        </fieldset>
-      {% endunless %}
+        <button class="add-to-cart add-to-cart--reference" type="submit" {% unless selected_variant.available %}disabled{% endunless %}>
+          {% if selected_variant.available %}Add to cart{% else %}Sold out{% endif %}
+        </button>
 
-      <button class="add-to-cart" type="submit" {% unless product.selected_or_first_available_variant.available %}disabled{% endunless %}>
-        {% if product.selected_or_first_available_variant.available %}Add to cart{% else %}Sold out{% endif %}
-      </button>
-      <script type="application/json" data-variants-json>{{ product.variants | json }}</script>
-    {% endform %}
+        <div class="product-payments-note" aria-label="Checkout benefits">
+          <span>Secure checkout</span><span>Encrypted payment</span><span>Tracked order</span>
+        </div>
 
-    <div class="product-description">{{ product.description }}</div>
+        <script type="application/json" data-variants-json>{{ product.variants | json }}</script>
+      {% endform %}
+    </aside>
   </div>
 </section>
-{% schema %}{"name":"Main product","settings":[]}{% endschema %}
+
+<section class="product-trust-strip">
+  <div class="page-width product-trust-grid">
+    <div><span class="trust-icon">☆</span><strong>Premium feel</strong><small>Built for everyday wear</small></div>
+    <div><span class="trust-icon">▱</span><strong>Tracked shipping</strong><small>Tracking sent after fulfillment</small></div>
+    <div><span class="trust-icon">↻</span><strong>Easy support</strong><small>We’re here if you need us</small></div>
+  </div>
+</section>
+
+<section class="page-width product-details-section" data-product-tabs>
+  <div class="product-tabs" role="tablist">
+    <button class="product-tab is-active" type="button" data-product-tab="description">Description</button>
+    <button class="product-tab" type="button" data-product-tab="shipping">Shipping & returns</button>
+  </div>
+
+  <div class="product-tab-panel is-active" data-product-panel="description">
+    <div class="product-description-layout">
+      <div>
+        <p class="eyebrow">Statement wear</p>
+        <h2>{{ product.title }}</h2>
+      </div>
+      <div class="product-long-copy">
+        {% if product.description != blank %}
+          <div class="rte-copy">{{ product.description }}</div>
+        {% else %}
+          <p>A clean NØMAD silhouette built around bold back graphics and a relaxed everyday fit.</p>
+        {% endif %}
+
+        <h3>Characteristics & benefits</h3>
+        <ul class="product-feature-lines">
+          <li><strong>NØMAD identity</strong><span>Statement graphic designed to be noticed.</span></li>
+          <li><strong>Relaxed silhouette</strong><span>Easy proportions for daily styling.</span></li>
+          <li><strong>Premium feel</strong><span>Clean construction with a substantial hand feel.</span></li>
+          <li><strong>Black & white</strong><span>Two essential colorways built around the artwork.</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="product-tab-panel" data-product-panel="shipping" hidden>
+    <div class="product-description-layout">
+      <div><p class="eyebrow">Good to know</p><h2>Shipping & returns</h2></div>
+      <div class="product-long-copy">
+        <p>Tracking details are sent after your order is fulfilled. Delivery time depends on the destination and selected shipping method.</p>
+        <p>Returns and exchanges follow the store policy and eligibility conditions.</p>
+        <div class="policy-links"><a href="/policies/shipping-policy">Shipping policy</a><a href="/policies/refund-policy">Refund policy</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% if product.images.size > 2 %}
+<section class="page-width product-community">
+  <div class="product-community__head">
+    <p class="eyebrow">NØMAD in motion</p>
+    <h2>Wear the statement.</h2>
+  </div>
+  <div class="product-community__grid">
+    {% for image in product.images offset: 2 limit: 4 %}
+      <div class="product-community__item">{{ image | image_url: width: 1000 | image_tag: widths: '360,600,800,1000', loading: 'lazy', alt: product.title }}</div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<section class="page-width product-profile">
+  <div class="product-profile__head"><p class="eyebrow">Product profile</p><h2>Made to wear easy.</h2></div>
+  <div class="product-profile__rows">
+    <div class="profile-row"><strong>Fit</strong><div class="profile-scale"><span>Fitted</span><i><b style="left:72%"></b></i><span>Relaxed</span></div></div>
+    <div class="profile-row"><strong>Look</strong><div class="profile-scale"><span>Minimal</span><i><b style="left:84%"></b></i><span>Statement</span></div></div>
+    <div class="profile-row"><strong>Styling</strong><div class="profile-scale"><span>Clean</span><i><b style="left:62%"></b></i><span>Bold</span></div></div>
+  </div>
+</section>
+
+{% schema %}
+{"name":"Main product","settings":[]}
+{% endschema %}
