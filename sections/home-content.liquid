@@ -1,9 +1,92 @@
-<section class="ticker"><div class="ticker__track"><span>Dubai state of mind</span><span>•</span><span>Premium cotton</span><span>•</span><span>Worldwide shipping</span><span>•</span><span>Built to be noticed</span><span>•</span><span>Dubai state of mind</span><span>•</span><span>Premium cotton</span><span>•</span><span>Worldwide shipping</span><span>•</span><span>Built to be noticed</span><span>•</span></div></section>
-<section class="split">
-  <div class="split__media">{% if section.settings.quality_image != blank %}{{ section.settings.quality_image | image_url: width: 1800 | image_tag: widths: '700,1000,1400,1800', loading: 'lazy', alt: 'NØMAD quality' }}{% else %}<div class="hero__placeholder" style="height:100%">Upload quality image</div>{% endif %}</div>
-  <div class="split__content"><p class="eyebrow">Made different</p><h2>{{ section.settings.quality_heading }}</h2><p>{{ section.settings.quality_text }}</p><div class="feature-list"><div>Premium heavyweight feel</div><div>Relaxed everyday fit</div><div>Statement back prints</div></div></div>
+<section class="ticker" aria-label="NØMAD highlights">
+  <div class="ticker__track">
+    <span>Dubai state of mind</span><span>•</span><span>Premium feel</span><span>•</span><span>Statement tees</span><span>•</span><span>Made to be noticed</span><span>•</span>
+    <span>Dubai state of mind</span><span>•</span><span>Premium feel</span><span>•</span><span>Statement tees</span><span>•</span><span>Made to be noticed</span><span>•</span>
+  </div>
 </section>
-<section class="section reviews"><div class="page-width"><div class="section-head"><div><p class="eyebrow" style="color:#888">Real people. Real NØMAD.</p><h2 class="section-title">What they’re saying</h2></div></div><div class="reviews-grid"><article class="review"><div class="stars">★★★★★</div><blockquote>“The fit is perfect and the print gets attention every single time I wear it.”</blockquote><cite>Alex M. · Verified buyer</cite></article><article class="review"><div class="stars">★★★★★</div><blockquote>“Exactly the clean oversized look I wanted. Quality feels way above the price.”</blockquote><cite>James R. · Verified buyer</cite></article><article class="review"><div class="stars">★★★★★</div><blockquote>“Delivery was smooth and the shirt looks even better in person.”</blockquote><cite>Daniel K. · Verified buyer</cite></article></div></div></section>
-<section class="benefits page-width"><div class="benefit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 7h11v10H3zM14 10h4l3 3v4h-7z"/><circle cx="7" cy="19" r="2"/><circle cx="18" cy="19" r="2"/></svg><h3>Worldwide shipping</h3><p>Tracked delivery to selected countries.</p></div><div class="benefit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m4 12 5 5L20 6"/></svg><h3>Secure checkout</h3><p>Your payment is protected at checkout.</p></div><div class="benefit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 5h16v14H4zM7 9h10M7 13h6"/></svg><h3>Support</h3><p>Need help? Our team is here for you.</p></div><div class="benefit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18"/></svg><h3>Easy payments</h3><p>Fast, simple and encrypted payment.</p></div></section>
-<section class="section"><div class="page-width"><div class="faq"><div class="section-head"><div><p class="eyebrow">Need to know</p><h2 class="section-title">FAQ</h2></div></div><details><summary>How does the fit run?</summary><div class="faq__answer">NØMAD tees are designed with a relaxed, modern fit. Choose your usual size for the intended look or size up for a more oversized fit.</div></details><details><summary>How long does shipping take?</summary><div class="faq__answer">Shipping times depend on destination. Your tracking details are sent by email once the order leaves our facility.</div></details><details><summary>Can I track my order?</summary><div class="faq__answer">Yes. Use the Track Order page or the tracking link sent to your email after fulfillment.</div></details><details><summary>Can I exchange or return an item?</summary><div class="faq__answer">Returns and exchanges follow the store return policy. Items must meet the conditions listed in our refund policy.</div></details></div></div></section>
-{% schema %}{"name":"Home content","settings":[{"type":"image_picker","id":"quality_image","label":"Quality section image"},{"type":"text","id":"quality_heading","label":"Quality heading","default":"Built to feel as good as it looks."},{"type":"textarea","id":"quality_text","label":"Quality text","default":"A clean silhouette, substantial feel and statement graphics designed for daily wear. NØMAD is made for people who don't need permission to stand out."}],"presets":[{"name":"Home content"}]}{% endschema %}
+
+<section class="quality-story">
+  <div class="page-width">
+    <div class="quality-story__intro">
+      <div>
+        <p class="eyebrow">The NØMAD standard</p>
+        <span class="quality-story__index">01 / THE TEE</span>
+      </div>
+      <div class="quality-story__copy">
+        <h2>{{ section.settings.quality_heading }}</h2>
+        <p>{{ section.settings.quality_text }}</p>
+      </div>
+    </div>
+
+    <div class="quality-story__grid">
+      <article class="quality-point">
+        <span>01</span>
+        <h3>The fabric</h3>
+        <p>A soft cotton feel with a substantial hand. Clean, comfortable and made to feel premium from the first wear.</p>
+      </article>
+      <article class="quality-point">
+        <span>02</span>
+        <h3>The fit</h3>
+        <p>Relaxed proportions and a modern silhouette that works on its own or layered without looking overdone.</p>
+      </article>
+      <article class="quality-point">
+        <span>03</span>
+        <h3>The print</h3>
+        <p>Bold back graphics turn a simple T-shirt into the part of the outfit people actually remember.</p>
+      </article>
+      <article class="quality-point quality-point--attitude">
+        <span>04</span>
+        <h3>The attitude</h3>
+        <p>Fast cars. Big plans. Questionable decisions. The kind of lines most brands are too careful to print.</p>
+      </article>
+    </div>
+
+    <div class="quality-manifesto">
+      <p>Not designed to blend in.</p>
+      <span>Designed in a Dubai state of mind.</span>
+    </div>
+  </div>
+</section>
+
+<section class="section reviews">
+  <div class="page-width">
+    <div class="section-head">
+      <div><p class="eyebrow" style="color:#888">Real people. Real NØMAD.</p><h2 class="section-title">What they’re saying</h2></div>
+    </div>
+    <div class="reviews-grid">
+      <article class="review"><div class="stars">★★★★★</div><blockquote>“The fit is perfect and the print gets attention every single time I wear it.”</blockquote><cite>Alex M. · Verified buyer</cite></article>
+      <article class="review"><div class="stars">★★★★★</div><blockquote>“Exactly the clean oversized look I wanted. Quality feels way above the price.”</blockquote><cite>James R. · Verified buyer</cite></article>
+      <article class="review"><div class="stars">★★★★★</div><blockquote>“Delivery was smooth and the shirt looks even better in person.”</blockquote><cite>Daniel K. · Verified buyer</cite></article>
+    </div>
+  </div>
+</section>
+
+<section class="benefits page-width">
+  <div class="benefit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 7h11v10H3zM14 10h4l3 3v4h-7z"/><circle cx="7" cy="19" r="2"/><circle cx="18" cy="19" r="2"/></svg><h3>Worldwide shipping</h3><p>Tracked delivery to selected countries.</p></div>
+  <div class="benefit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m4 12 5 5L20 6"/></svg><h3>Secure checkout</h3><p>Your payment is protected at checkout.</p></div>
+  <div class="benefit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 5h16v14H4zM7 9h10M7 13h6"/></svg><h3>Support</h3><p>Need help? Our team is here for you.</p></div>
+  <div class="benefit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18"/></svg><h3>Easy payments</h3><p>Fast, simple and encrypted payment.</p></div>
+</section>
+
+<section class="section">
+  <div class="page-width">
+    <div class="faq">
+      <div class="section-head"><div><p class="eyebrow">Need to know</p><h2 class="section-title">FAQ</h2></div></div>
+      <details><summary>How does the fit run?</summary><div class="faq__answer">NØMAD tees are designed with a relaxed, modern fit. Choose your usual size for the intended look or size up for a more oversized fit.</div></details>
+      <details><summary>How long does shipping take?</summary><div class="faq__answer">Shipping times depend on destination. Your tracking details are sent by email once the order leaves our facility.</div></details>
+      <details><summary>Can I track my order?</summary><div class="faq__answer">Yes. Use the Track Order page or the tracking link sent to your email after fulfillment.</div></details>
+      <details><summary>Can I exchange or return an item?</summary><div class="faq__answer">Returns and exchanges follow the store return policy. Items must meet the conditions listed in our refund policy.</div></details>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Home content",
+  "settings": [
+    { "type": "text", "id": "quality_heading", "label": "Quality heading", "default": "Premium feel. Unfiltered attitude." },
+    { "type": "textarea", "id": "quality_text", "label": "Quality text", "default": "A clean, structured tee made to carry the kind of lines most brands are too careful to print. NØMAD pairs a premium everyday feel with relaxed proportions and statement graphics built to be noticed." }
+  ],
+  "presets": [{ "name": "Home content" }]
+}
+{% endschema %}
