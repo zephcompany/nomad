@@ -1,6 +1,16 @@
 document.documentElement.classList.remove('no-js');
 
 document.addEventListener('DOMContentLoaded', () => {
+  const formatMoney = (cents) => {
+    if (window.Shopify && typeof window.Shopify.formatMoney === 'function') {
+      return window.Shopify.formatMoney(cents);
+    }
+    return (cents / 100).toLocaleString(undefined, {
+      style: 'currency',
+      currency: window.Shopify?.currency?.active || 'USD'
+    });
+  };
+
   const menuToggle = document.querySelector('[data-menu-toggle]');
   const mobileMenu = document.querySelector('[data-mobile-menu]');
 
@@ -85,14 +95,28 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('[data-product-form]').forEach((form) => {
     const variants = JSON.parse(form.querySelector('[data-variants-json]')?.textContent || '[]');
     const variantId = form.querySelector('[name="id"]');
+    const quantityInput = form.querySelector('[data-product-quantity]');
     const productPage = form.closest('.product-page');
     const price = productPage?.querySelector('[data-product-price]');
     const button = form.querySelector('[type="submit"]');
     const mainImage = productPage?.querySelector('[data-product-main-image]');
     const thumbnails = Array.from(productPage?.querySelectorAll('[data-gallery-thumbnail]') || []);
+    const selectedColorLabel = form.querySelector('[data-selected-color]');
+    const purchaseOffers = form.querySelector('[data-purchase-offers]');
+    const purchaseRadios = Array.from(form.querySelectorAll('[data-purchase-quantity]'));
+
+    const syncPurchaseOfferPrices = (unitPrice) => {
+      if (!purchaseOffers) return;
+      purchaseOffers.dataset.unitPrice = String(unitPrice);
+      purchaseOffers.querySelectorAll('[data-offer-price]').forEach((node) => {
+        const qty = Number(node.dataset.offerPrice || 1);
+        node.textContent = formatMoney(unitPrice * qty);
+      });
+    };
 
     const syncVariant = () => {
-      const selected = Array.from(form.querySelectorAll('[data-option-index]')).map((group) => {
+      const optionGroups = Array.from(form.querySelectorAll('[data-option-index]'));
+      const selected = optionGroups.map((group) => {
         const checked = group.querySelector('input:checked');
         return checked ? checked.value : null;
       });
@@ -104,22 +128,20 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!match) return;
 
       if (variantId) variantId.value = match.id;
-
-      if (price) {
-        if (window.Shopify && typeof window.Shopify.formatMoney === 'function') {
-          price.textContent = window.Shopify.formatMoney(match.price);
-        } else {
-          price.textContent = (match.price / 100).toLocaleString(undefined, {
-            style: 'currency',
-            currency: window.Shopify?.currency?.active || 'USD'
-          });
-        }
-      }
+      if (price) price.textContent = formatMoney(match.price);
+      syncPurchaseOfferPrices(match.price);
 
       if (button) {
         button.disabled = !match.available;
         button.textContent = match.available ? 'Add to cart' : 'Sold out';
       }
+
+      const colorGroup = optionGroups.find((group) => {
+        const heading = group.querySelector('.option-heading');
+        return heading && heading.textContent.toLowerCase().includes('color');
+      });
+      const selectedColor = colorGroup?.querySelector('input:checked')?.value;
+      if (selectedColorLabel && selectedColor) selectedColorLabel.textContent = selectedColor;
 
       if (mainImage && match.featured_image?.src) {
         mainImage.removeAttribute('srcset');
@@ -138,7 +160,35 @@ document.addEventListener('DOMContentLoaded', () => {
       window.history.replaceState({}, '', url);
     };
 
+    purchaseRadios.forEach((radio) => {
+      radio.addEventListener('change', () => {
+        const quantity = Number(radio.value || 1);
+        if (quantityInput) quantityInput.value = String(quantity);
+        form.querySelectorAll('.purchase-offer').forEach((offer) => {
+          const input = offer.querySelector('[data-purchase-quantity]');
+          offer.classList.toggle('is-selected', Boolean(input?.checked));
+        });
+      });
+    });
+
     form.addEventListener('change', syncVariant);
     syncVariant();
+  });
+
+  document.querySelectorAll('[data-product-tabs]').forEach((tabsRoot) => {
+    const tabs = Array.from(tabsRoot.querySelectorAll('[data-product-tab]'));
+    const panels = Array.from(tabsRoot.querySelectorAll('[data-product-panel]'));
+
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        const target = tab.dataset.productTab;
+        tabs.forEach((item) => item.classList.toggle('is-active', item === tab));
+        panels.forEach((panel) => {
+          const active = panel.dataset.productPanel === target;
+          panel.classList.toggle('is-active', active);
+          panel.hidden = !active;
+        });
+      });
+    });
   });
 });
