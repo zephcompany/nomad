@@ -5,20 +5,52 @@
       <div><p class="eyebrow">{{ section.settings.eyebrow }}</p><h2 class="section-title">{{ section.settings.heading }}</h2></div>
       {% if collection != blank %}<a class="section-link" href="{{ collection.url }}">View all</a>{% endif %}
     </div>
+
     <div class="product-grid">
       {% if collection != blank %}
         {% for product in collection.products limit: section.settings.limit %}
-          <article class="product-card">
-            <a href="{{ product.url }}">
+          <article class="product-card" data-product-card>
+            <a class="product-card__image-link" href="{{ product.url }}" aria-label="View {{ product.title | escape }}">
               <div class="product-card__media">
-                {% if product.featured_image %}{{ product.featured_image | image_url: width: 1000 | image_tag: class: 'product-card__primary', widths: '360,540,720,1000', loading: 'lazy', alt: product.title }}{% endif %}
-                {% if product.images[1] %}{{ product.images[1] | image_url: width: 1000 | image_tag: class: 'product-card__hover', widths: '360,540,720,1000', loading: 'lazy', alt: product.title }}{% endif %}
-              </div>
-              <div class="product-card__meta">
-                <h3 class="product-card__title">{{ product.title }}</h3>
-                <div class="product-card__row"><span class="product-card__price">{{ product.price | money }}</span><span class="swatches"><i class="swatch swatch--black"></i><i class="swatch swatch--white"></i></span></div>
+                {% if product.featured_image %}
+                  {{ product.featured_image | image_url: width: 1000 | image_tag: class: 'product-card__primary', widths: '360,540,720,1000', loading: 'lazy', alt: product.title }}
+                {% endif %}
+
+                {% comment %}
+                  Image 1 = Black, Image 2 = White, Image 3 = lifestyle/mockup hover.
+                  The hover only appears when a third product image exists.
+                {% endcomment %}
+                {% if product.images[2] %}
+                  {{ product.images[2] | image_url: width: 1000 | image_tag: class: 'product-card__hover', widths: '360,540,720,1000', loading: 'lazy', alt: product.title }}
+                {% endif %}
               </div>
             </a>
+
+            <div class="product-card__meta">
+              <h3 class="product-card__title">{{ product.title }}</h3>
+              <div class="product-card__row">
+                <span class="product-card__price">{{ product.price | money }}</span>
+
+                {% assign color_option = product.options_by_name['Color'] %}
+                {% if color_option != blank %}
+                  <div class="swatches" aria-label="Choose color">
+                    {% for color in color_option.values %}
+                      {% assign color_variant = product.variants | where: 'option1', color | first %}
+                      {% if color_variant.featured_image %}
+                        <button
+                          class="swatch swatch--{{ color | handleize }}{% if forloop.first %} is-active{% endif %}"
+                          type="button"
+                          aria-label="{{ color | escape }}"
+                          title="{{ color | escape }}"
+                          data-color-swatch
+                          data-image="{{ color_variant.featured_image | image_url: width: 1000 }}"
+                        ></button>
+                      {% endif %}
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              </div>
+            </div>
           </article>
         {% endfor %}
       {% else %}
