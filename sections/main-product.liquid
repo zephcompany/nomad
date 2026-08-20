@@ -1,8 +1,30 @@
 <section class="page-width product-page">
-  <div class="product-gallery">
-    {% for image in product.images %}
-      {{ image | image_url: width: 1600 | image_tag: widths: '500,800,1200,1600', loading: 'lazy', alt: product.title }}
-    {% endfor %}
+  <div class="product-media-viewer" data-product-gallery>
+    {% assign current_media = product.selected_or_first_available_variant.featured_image | default: product.featured_image %}
+
+    <div class="product-gallery__main">
+      {% if current_media %}
+        {{ current_media | image_url: width: 1800 | image_tag: class: 'product-gallery__main-image', widths: '600,900,1200,1600,1800', loading: 'eager', fetchpriority: 'high', alt: product.title, data-product-main-image: '' }}
+      {% endif %}
+    </div>
+
+    {% if product.images.size > 1 %}
+      <div class="product-gallery__thumbs" aria-label="Product images">
+        {% for image in product.images %}
+          <button
+            class="product-gallery__thumb{% if image.id == current_media.id %} is-active{% endif %}"
+            type="button"
+            aria-label="View image {{ forloop.index }}"
+            data-gallery-thumbnail
+            data-image-id="{{ image.id }}"
+            data-image-src="{{ image | image_url: width: 1800 }}"
+            data-image-alt="{{ product.title | escape }}"
+          >
+            {{ image | image_url: width: 220 | image_tag: widths: '90,140,220', loading: 'lazy', alt: product.title }}
+          </button>
+        {% endfor %}
+      </div>
+    {% endif %}
   </div>
 
   <div class="product-info">
