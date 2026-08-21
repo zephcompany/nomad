@@ -2,13 +2,12 @@ document.documentElement.classList.remove('no-js');
 
 document.addEventListener('DOMContentLoaded', () => {
   const formatMoney = (cents) => {
-    if (window.Shopify && typeof window.Shopify.formatMoney === 'function') {
-      return window.Shopify.formatMoney(cents);
-    }
-    return (cents / 100).toLocaleString(undefined, {
+    return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: window.Shopify?.currency?.active || 'USD'
-    });
+      currency: 'USD',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(cents / 100);
   };
 
   const menuToggle = document.querySelector('[data-menu-toggle]');
