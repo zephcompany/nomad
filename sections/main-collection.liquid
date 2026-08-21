@@ -23,7 +23,7 @@
           <div class="product-card__meta">
             <h2 class="product-card__title">{{ product.title }}</h2>
             <div class="product-card__row">
-              <span class="product-card__price">{{ product.price | money }}</span>
+              <span class="product-card__price">{% render 'usd-price', price: product.price %}</span>
               {% assign color_option = product.options_by_name['Color'] %}
               {% if color_option != blank %}
                 <div class="swatches" aria-label="Choose color" data-card-swatches>
