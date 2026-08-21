@@ -1,0 +1,4 @@
+{% liquid
+  assign usd_dollars = price | divided_by: 100
+  assign usd_cents = price | modulo: 100
+%}${{ usd_dollars }}.{% if usd_cents < 10 %}0{% endif %}{{ usd_cents }}
