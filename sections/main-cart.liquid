@@ -1,1 +1,73 @@
-<section class="page-width cart-page"><div class="section-head"><div><p class="eyebrow">Your order</p><h1 class="section-title">Cart</h1></div></div>{% if cart.item_count > 0 %}{% form 'cart', cart %}{% for item in cart.items %}<div class="cart-item"><a href="{{ item.url }}">{{ item.image | image_url: width: 300 | image_tag: alt: item.product.title }}</a><div><a href="{{ item.url }}"><strong>{{ item.product.title }}</strong></a><div class="product-card__price">{{ item.variant.title }}</div><div style="margin-top:10px"><input type="number" name="updates[]" min="0" value="{{ item.quantity }}" style="width:70px;padding:8px;border:1px solid #ccc"></div></div><div>{% render 'usd-price', price: item.final_line_price %}</div></div>{% endfor %}<div class="cart-summary"><div style="display:flex;justify-content:space-between;margin-bottom:20px"><strong>Subtotal</strong><strong>{% render 'usd-price', price: cart.total_price %}</strong></div><p class="product-card__price">Taxes and shipping calculated at checkout.</p><button class="add-to-cart" type="submit" name="checkout">Checkout</button><button type="submit" class="section-link" style="margin-top:16px;background:none;border-width:0 0 1px;padding:0 0 4px">Update cart</button></div>{% endform %}{% else %}<div class="empty-state"><h1>Your cart is empty.</h1><a class="btn" href="/collections/t-shirts">Shop T-Shirts</a></div>{% endif %}</section>{% schema %}{"name":"Main cart","settings":[]}{% endschema %}
+<section class="page-width cart-page">
+  <div class="section-head">
+    <div>
+      <p class="eyebrow">Your order</p>
+      <h1 class="section-title">Cart</h1>
+    </div>
+  </div>
+
+  {% if cart.item_count > 0 %}
+    {% form 'cart', cart %}
+      {% for item in cart.items %}
+        <div class="cart-item">
+          <a href="{{ item.url }}">
+            {{ item.image | image_url: width: 300 | image_tag: alt: item.product.title }}
+          </a>
+
+          <div>
+            <a href="{{ item.url }}"><strong>{{ item.product.title }}</strong></a>
+            <div class="product-card__price">{{ item.variant.title }}</div>
+
+            <div style="margin-top:10px;display:flex;align-items:center;gap:12px">
+              <input
+                type="number"
+                name="updates[]"
+                min="0"
+                value="{{ item.quantity }}"
+                aria-label="Quantity for {{ item.product.title | escape }}"
+                style="width:70px;padding:8px;border:1px solid #ccc"
+              >
+
+              <a
+                href="{{ routes.cart_change_url }}?line={{ forloop.index }}&quantity=0"
+                aria-label="Remove {{ item.product.title | escape }} from cart"
+                title="Remove item"
+                style="width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;border:1px solid #d7d7d7;background:#fff;color:#111;transition:opacity .2s ease,border-color .2s ease"
+                onmouseover="this.style.opacity='.55';this.style.borderColor='#111'"
+                onmouseout="this.style.opacity='1';this.style.borderColor='#d7d7d7'"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M4 7h16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  <path d="M9 3h6l1 4H8l1-4Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+                  <path d="M7 7l1 14h8l1-14" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+                  <path d="M10 11v6M14 11v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+
+          <div>{% render 'usd-price', price: item.final_line_price %}</div>
+        </div>
+      {% endfor %}
+
+      <div class="cart-summary">
+        <div style="display:flex;justify-content:space-between;margin-bottom:20px">
+          <strong>Subtotal</strong>
+          <strong>{% render 'usd-price', price: cart.total_price %}</strong>
+        </div>
+        <p class="product-card__price">Taxes and shipping calculated at checkout.</p>
+        <button class="add-to-cart" type="submit" name="checkout">Checkout</button>
+        <button type="submit" class="section-link" style="margin-top:16px;background:none;border-width:0 0 1px;padding:0 0 4px">Update cart</button>
+      </div>
+    {% endform %}
+  {% else %}
+    <div class="empty-state">
+      <h1>Your cart is empty.</h1>
+      <a class="btn" href="/collections/t-shirts">Shop T-Shirts</a>
+    </div>
+  {% endif %}
+</section>
+
+{% schema %}
+{"name":"Main cart","settings":[]}
+{% endschema %}
