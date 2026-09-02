@@ -1,3 +1,8 @@
+{% assign source_collection = collection %}
+{% if collection.handle == 't-shirts' %}
+  {% assign source_collection = collections['all'] %}
+{% endif %}
+
 <section class="page-width">
   <header class="collection-head">
     <p class="eyebrow">NØMAD collection</p>
@@ -5,49 +10,51 @@
     {% if collection.description != blank %}<div class="product-description">{{ collection.description }}</div>{% endif %}
   </header>
 
-  {% paginate collection.products by 24 %}
+  {% paginate source_collection.products by 24 %}
     <div class="product-grid">
-      {% for product in collection.products %}
-        <article class="product-card" data-product-card>
-          <a class="product-card__image-link" href="{{ product.url }}" aria-label="View {{ product.title | escape }}">
-            <div class="product-card__media">
-              {% if product.featured_image %}
-                {{ product.featured_image | image_url: width: 1000 | image_tag: class: 'product-card__primary', widths: '360,540,720,1000', loading: 'lazy', alt: product.title }}
-              {% endif %}
-              {% if product.images[2] %}
-                {{ product.images[2] | image_url: width: 1000 | image_tag: class: 'product-card__hover', widths: '360,540,720,1000', loading: 'lazy', alt: product.title }}
-              {% endif %}
-            </div>
-          </a>
+      {% for product in source_collection.products %}
+        {% if collection.handle != 't-shirts' or product.type == 'T-Shirt' %}
+          <article class="product-card" data-product-card>
+            <a class="product-card__image-link" href="{{ product.url }}" aria-label="View {{ product.title | escape }}">
+              <div class="product-card__media">
+                {% if product.featured_image %}
+                  {{ product.featured_image | image_url: width: 1000 | image_tag: class: 'product-card__primary', widths: '360,540,720,1000', loading: 'lazy', alt: product.title }}
+                {% endif %}
+                {% if product.images[2] %}
+                  {{ product.images[2] | image_url: width: 1000 | image_tag: class: 'product-card__hover', widths: '360,540,720,1000', loading: 'lazy', alt: product.title }}
+                {% endif %}
+              </div>
+            </a>
 
-          <div class="product-card__meta">
-            <h2 class="product-card__title">{{ product.title }}</h2>
-            <div class="product-card__row">
-              <span class="product-card__price">{% render 'usd-price', price: product.price %}</span>
-              {% assign color_option = product.options_by_name['Color'] %}
-              {% if color_option != blank %}
-                <div class="swatches" aria-label="Choose color" data-card-swatches>
-                  {% for color in color_option.values %}
-                    {% assign color_variant = product.variants | where: 'option1', color | first %}
-                    {% assign image_index = forloop.index0 %}
-                    {% assign swatch_image = product.images[image_index] %}
-                    {% if color_variant.featured_image %}{% assign swatch_image = color_variant.featured_image %}{% endif %}
-                    {% if swatch_image %}
-                      <button
-                        class="swatch swatch--{{ color | handleize }}{% if forloop.first %} is-active{% endif %}"
-                        type="button"
-                        aria-label="{{ color | escape }}"
-                        title="{{ color | escape }}"
-                        data-color-swatch
-                        data-image="{{ swatch_image | image_url: width: 1000 }}"
-                      ></button>
-                    {% endif %}
-                  {% endfor %}
-                </div>
-              {% endif %}
+            <div class="product-card__meta">
+              <h2 class="product-card__title">{{ product.title }}</h2>
+              <div class="product-card__row">
+                <span class="product-card__price">{% render 'usd-price', price: product.price %}</span>
+                {% assign color_option = product.options_by_name['Color'] %}
+                {% if color_option != blank %}
+                  <div class="swatches" aria-label="Choose color" data-card-swatches>
+                    {% for color in color_option.values %}
+                      {% assign color_variant = product.variants | where: 'option1', color | first %}
+                      {% assign image_index = forloop.index0 %}
+                      {% assign swatch_image = product.images[image_index] %}
+                      {% if color_variant.featured_image %}{% assign swatch_image = color_variant.featured_image %}{% endif %}
+                      {% if swatch_image %}
+                        <button
+                          class="swatch swatch--{{ color | handleize }}{% if forloop.first %} is-active{% endif %}"
+                          type="button"
+                          aria-label="{{ color | escape }}"
+                          title="{{ color | escape }}"
+                          data-color-swatch
+                          data-image="{{ swatch_image | image_url: width: 1000 }}"
+                        ></button>
+                      {% endif %}
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              </div>
             </div>
-          </div>
-        </article>
+          </article>
+        {% endif %}
       {% else %}
         <div class="empty-state"><h2>No products yet.</h2></div>
       {% endfor %}
