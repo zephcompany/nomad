@@ -10,7 +10,7 @@
     {% if collection.description != blank %}<div class="product-description">{{ collection.description }}</div>{% endif %}
   </header>
 
-  {% paginate source_collection.products by 24 %}
+  {% paginate source_collection.products by 250 %}
     <div class="product-grid">
       {% for product in source_collection.products %}
         {% if collection.handle != 't-shirts' or product.type == 'T-Shirt' %}
@@ -59,10 +59,6 @@
         <div class="empty-state"><h2>No products yet.</h2></div>
       {% endfor %}
     </div>
-
-    {% if paginate.pages > 1 %}
-      <div style="display:flex;justify-content:center;gap:20px;padding:60px 0">{{ paginate | default_pagination }}</div>
-    {% endif %}
   {% endpaginate %}
 </section>
 {% schema %}{"name":"Main collection","settings":[]}{% endschema %}
