@@ -22,4 +22,39 @@
   @media(max-width:640px){.footer-logo img{width:160px}}
 </style>
 
+
+<div class="zeph-credit">
+  <a class="zeph-credit__link" href="https://www.instagram.com/zeph.rafa/" aria-label="Instagram @zeph.rafa">
+    <img
+      class="zeph-credit__image"
+      src="https://tassiorenam.com.br/wp-content/uploads/2026/10/tiny-1.webp"
+      alt="Zeph"
+      loading="lazy"
+    >
+  </a>
+</div>
+
+<style>
+  .zeph-credit{
+    background:#000;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:40px 0;
+  }
+  .zeph-credit__link{
+    display:block;
+    width:13%;
+    line-height:0;
+  }
+  .zeph-credit__image{
+    display:block;
+    width:100%;
+    height:auto;
+  }
+  @media(max-width:767px){
+    .zeph-credit__link{width:111px}
+  }
+</style>
+
 {% schema %}{"name":"Footer","settings":[]}{% endschema %}
